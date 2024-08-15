@@ -1,9 +1,11 @@
 import { Dispatch, memo, useEffect, useRef, useState } from 'react';
 import './App.css';
 
+type PowerSourceName = 'Home' | 'Grid' | 'Solar' | 'Battery' | 'EV';
+
 type PowerSource = {
 	id: number;
-	name: 'Grid' | 'Solar' | 'Battery' | 'EV';
+	name: PowerSourceName;
 	watts: number;
 	maxWatt: number;
 	minWatt: number;
@@ -37,48 +39,46 @@ function App() {
 	);
 }
 
-type SourceProps = { id: number; name: string; watts: number; setState?: Dispatch<React.SetStateAction<PowerSource[]>> };
+type SourceProps = { id: number; name: PowerSourceName; watts: number; setState?: Dispatch<React.SetStateAction<PowerSource[]>> };
 
 const Source = memo(({ id, name, watts, setState }: SourceProps) => {
 	const [intervalTime, setIntervalTime] = useState<number>(2000);
-	const [percentDiff, setPercentDiff] = useState<number>(0);
-	const [triggerAnimation, setTriggerAnimation] = useState(false);
 
 	const prevWattRef = useRef<number>(0);
+	const electricityContainerRef = useRef<HTMLDivElement>(null);
 
-	const percent = Math.round(percentDiff);
+	const percent = getWatttPercentDiff(prevWattRef.current, watts);
 
 	useEffect(() => {
-		if (!setState) {
-			setPercentDiff(percentDifference(prevWattRef.current, watts));
-			prevWattRef.current = watts;
-			return;
-		}
+		prevWattRef.current = watts;
+
+		if (!setState) return;
 
 		const intervalId = setInterval(() => {
 			setIntervalTime(Math.floor(randomNumber(5000, 1000)));
 			setState((prev) => {
 				const sourceIdx = prev.findIndex((source) => source.id === id);
 				const source = prev[sourceIdx];
-				const watts = randomNumber(source.maxWatt, source.minWatt);
-
-				setPercentDiff(percentDifference(prevWattRef.current, watts));
 				prev[sourceIdx].watts = randomNumber(source.maxWatt, source.minWatt);
-				prevWattRef.current = watts;
+
 				return [...prev];
 			});
 		}, intervalTime);
 
-		setTriggerAnimation(true);
-
-		setTimeout(() => {
-			setTriggerAnimation(false);
-		}, 1000);
+		triggerAnimation();
 
 		return () => {
 			clearInterval(intervalId);
 		};
 	}, [id, intervalTime, setState, watts]);
+
+	const triggerAnimation = () => {
+		electricityContainerRef.current?.classList.add('animate');
+
+		setTimeout(() => {
+			electricityContainerRef.current?.classList.remove('animate');
+		}, 1000);
+	};
 
 	return (
 		<>
@@ -98,7 +98,7 @@ const Source = memo(({ id, name, watts, setState }: SourceProps) => {
 			</div>
 			{name !== 'Home' && (
 				<div className={`line ${name.toLowerCase()}`}>
-					<div className={`electricity-container ${triggerAnimation ? 'animate' : ''}`}>
+					<div ref={electricityContainerRef} className="electricity-container">
 						<div className="electricity" />
 					</div>
 				</div>
@@ -107,11 +107,11 @@ const Source = memo(({ id, name, watts, setState }: SourceProps) => {
 	);
 });
 
-function percentDifference(oldNumber: number, newNumber: number) {
+function getWatttPercentDiff(oldNumber: number, newNumber: number) {
 	const difference = newNumber - oldNumber;
 	const percentDiff = (difference / oldNumber) * 100;
 
-	return percentDiff === Infinity || percentDiff === -Infinity || isNaN(percentDiff) ? 0 : percentDiff;
+	return percentDiff === Infinity || percentDiff === -Infinity || isNaN(percentDiff) ? 0 : Math.round(percentDiff);
 }
 
 function randomNumber(max: number, min: number) {

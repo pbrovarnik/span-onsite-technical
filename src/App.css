@@ -62,30 +62,31 @@
 .line {
 	position: absolute;
 	height: 5px;
-	width: 277px;
+	width: 15vw;
 	background-color: black;
+	border-radius: 10px;
 
 	&.grid {
-		left: 24%;
-		top: 35%;
+		left: 26%;
+		top: 36%;
 		transform: rotate(27deg);
 	}
 
 	&.solar {
-		left: 24%;
-		bottom: 35%;
+		left: 26%;
+		bottom: 36%;
 		transform: rotate(332deg);
 	}
 
 	&.battery {
-		right: 24%;
-		top: 35%;
+		right: 26%;
+		top: 36%;
 		transform: rotate(152deg);
 	}
 
 	&.ev {
-		right: 24%;
-		bottom: 35%;
+		right: 26%;
+		bottom: 36%;
 		transform: rotate(207deg);
 	}
 
@@ -94,6 +95,7 @@
 		height: 100%;
 		position: relative;
 		overflow: hidden;
+		border-radius: 10px;
 	}
 
 	.electricity {
@@ -103,6 +105,7 @@
 		position: absolute;
 		top: 0;
 		left: -100%;
+		border-radius: 10px;
 	}
 
 	.animate .electricity {
