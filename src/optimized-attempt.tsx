@@ -84,16 +84,14 @@ const Source = memo(({ id, name, watts, setState }: SourceProps) => {
 		<>
 			<div className={`power-source ${name.toLowerCase()}`}>
 				<div className="power-source-name">{name}</div>
-				<div className="power-source-data">
-					<span>{watts.toFixed(2)}W</span>
-					<span
-						style={{
-							color: percent > 0 ? 'green' : percent < 0 ? 'red' : 'unset',
-						}}
-						className="percent-diff">
-						{percent > 0 ? <span>&#x2191;</span> : percent < 0 ? <span>&#x2193;</span> : ''}
-						<span> {percent}%</span>
-					</span>
+				<div className="power-source-watts">{watts.toFixed(2)}W</div>
+				<div
+					style={{
+						color: percent > 0 ? 'red' : percent < 0 ? 'green' : 'unset',
+					}}
+					className="power-source-percent">
+					{percent > 0 ? <div>&#x2191;</div> : percent < 0 ? <div>&#x2193;</div> : ''}
+					<div>{percent > 0 ? `+${percent}` : percent}%</div>
 				</div>
 			</div>
 			{name !== 'Home' && (

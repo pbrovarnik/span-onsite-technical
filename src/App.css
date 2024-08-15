@@ -14,7 +14,7 @@
 	flex-direction: column;
 	justify-content: center;
 	align-items: center;
-	gap: 8px;
+	gap: 4px;
 	border: 1px solid black;
 	border-radius: 50%;
 
@@ -23,14 +23,15 @@
 		font-size: 20px;
 	}
 
-	& .power-source-data {
+	& .power-source-watts,
+	& .power-source-percent {
 		display: flex;
-		justify-content: space-between;
-		gap: 4px;
+		justify-content: center;
+		align-items: center;
+	}
 
-		& span {
-			width: 60px;
-		}
+	& .power-source-percent {
+		gap: 4px;
 	}
 
 	&.home {
